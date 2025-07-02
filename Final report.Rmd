@@ -1,0 +1,1275 @@
+---
+title: "**Síndrome de Burnout**"
+subtitle: "*Final report*"
+author:
+- Daniel Martínez Sales
+- Álvaro Muñoz Ruiz
+- Eduardo Montoro de la Cruz
+- Marta Peces Palomino
+- Joaquín Galera Gaitán
+- Minerva Bermúdez Ferrer
+- Luna Rubio Gómez
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+  pdf_document:
+    toc: true
+---
+
+# Resumen 
+
+Con el objetivo de ayudar a desarrollar estrategias para la prevención o el control del síndrome de Burnout, se ha llevado a cabo un estudio entre la correlación de la personalidad de los trabajadores sanitarios y este trastorno. De esta manera, se ha analizado la influencia de ciertos rasgos de la personalidad sobre las tres dimensiones del síndrome de Burnout: Cansancio Emocional, Despersonalización y Realización Personal. Para ello, se han utilizado métodos estadísticos multivariantes que permiten obtener qué rasgos de personalidad son más propensos a padecer síndrome de Burnout.  
+
+En el análisis discriminante lineal, antes de dicotomizar, se ha obtenido que el Neuroticismo es la más significativa para el Cansancio Emocional, y tiene peso en esta y en la Realización Personal, la Amabilidad la más influyente en la Despersonalización y la Responsabilidad en la Realización Personal.
+
+Por otro lado, y tras dicotomizar los datos, se ha obtenido que el Neuroticismo es la variable más significativa para el Cansancio Emocional y la Realización personal, siendo muy influyente en las tres variables, y la Responsabilidad la más importante en la Despersonalización.
+
+A partir del modelo logit, se ha obtenido que el Neuroticismo es la variable más significativa en el Cansancio Emocional y en la Realización Personal, mientras que la Responsabilidad es la variable con mayor fuerza para la Despersonalización. La Amabilidad y la Apertura no resultaron ser muy relevantes en ninguno de los modelos de las 3 dimensiones del Bournout. Estadísticamente, la Extraversión fue, junto con el Neuroticismo, influyente en el Cansancio Emocional. Cabe destacar la gran relevancia  del **Neuroticismo** en las tres dimensiones, poniendo en evidencia su correlación con el síndrome de Burnout. 
+
+# Introducción 
+
+
+Actualmente, la sanidad tiene una gran relevancia en la sociedad española, siendo uno de los servicios más esenciales. Por eso, es fundamental que los profesionales sanitarios mantengan una buena salud física y mental, ya que su bienestar impacta directamente en la calidad de la atención que ofrecen. Estar saludables les permite trabajar con mayor concentración, empatía y resistencia al estrés, reduciendo errores y mejorando la experiencia del paciente. 
+
+
+\vspace{4mm}
+
+
+El Síndrome de Burnout, también conocido como Síndrome de Agotamiento Profesional, es un trastorno reconocido por la Organización Mundial de la Salud (OMS) como un fenómeno asociado al trabajo. Surge como una respuesta prolongada al estrés crónico en el entorno laboral y afecta sobre todo a personas expuestas a altas demandas laborales, dándose principalmente en sectores como la salud, educación y atención al cliente.
+
+\vspace{4mm}
+
+Sus causas incluyen la sobrecarga laboral, la falta de control sobre las tareas y el apoyo insuficiente. Las consecuencias afectan tanto a los empleados, con problemas de salud física y mental, como a las empresas, generando ausentismo y baja productividad.
+
+\vspace{4mm}
+
+Prevenir el Síndrome de Burnout asegura la permanencia en el sector de los trabajadores, evita bajas laborales y garantiza la sostenibilidad del sistema de salud.
+
+# Materiales y métodos
+
+Con el objetivo de llevar a cabo un análisis estadístico exhaustivo de los datos proporcionados, se ha empleado el lenguaje de programación R. 
+
+## Materiales
+
+El síndrome de Burnout se mide a través del Maslach Burnout Inventory (MBI), que consiste en un cuestionario formado por una serie de preguntas  y afirmaciones  a las que se responde utilizando una  escala Likert, que suele ser desde “Nunca” hasta “Todos los días”. Las preguntas se dividen en tres temas: el cansancio emocional, la despersonalización y la realización personal. Según las respuestas que el individuo responde, se clasifican estas características en “Alto”, “Medio” y “Bajo”. En el sector sanitario es comúnmente utilizado el cuestionario MBI-HSS (Human Services Survey). La función del MBI consiste en ayudar a desarrollar estrategias para la prevención o el control del burnout gracias a las conclusiones deducidas a partir de los datos recogidos de grupos de profesionales de los sectores laborales estudiados.
+
+En el estudio de la correlación entre esta enfermedad y la personalidad de los trabajadores, se realiza el NEO-FFI (NEO Five-Factor Inventory), un cuestionario psicológico que evalúa los cinco grandes rasgos de la personalidad: neuroticismo, extraversión, apertura a la experiencia, amabilidad y responsabilidad. Con este propósito, se crea una serie de 60 ítems (12 por cada factor de personalidad), que se responden, de nuevo, en una escala Likert. Esta suele ir desde "Totalmente en desacuerdo" hasta "Totalmente de acuerdo". De la misma forma que para el MBI, según las respuestas del individuo, se clasifican del 0 al 100 los distintos rasgos del test. En este caso, el NEO-FFI proporciona información acerca de cómo las características personales pueden afectar en el desarrollo del síndrome de Burnout.
+
+Los datos recogidos para el estudio de la enfermedad dentro del sector sanitario contienen los resultados de cada uno de los cuestionarios explicados, así como diversas variables socio-demográficas (sexo, edad, número de hijos, etc.).
+
+
+## Métodos estadísticos
+
+A continuación, se realiza una breve explicación de los diversos métodos que han sido utilizados. En primer lugar, se ha realizado un análisis exploratorio de los datos proporcionados. Su objetivo principal es obtener una comprensión profunda de las características del conjunto de datos antes de aplicar modelos más complejos. Este análisis permitió identificar patrones, detectar posibles valores atípicos (outliers), comprender la distribución de las variables y evaluar la calidad de los datos.
+
+\vspace{4mm}
+
+Seguidamente, se ha realizado un análisis del tipo discriminante. Este tipo de análisis es útil cuando la variable dependiente es categórica y se desea comprender cómo las variables predictoras cuantitativas pueden separar las observaciones en diferentes clases. Además, el análisis discriminante no solo ayuda a clasificar las observaciones, sino que también permite identificar cuáles son las variables más significativas para separar las clases. Este modelo ayuda a reducir la dimensionalidad del conjunto de datos al eliminar las variables menos relevantes, lo que simplifica el modelo y mejora la interpretación de los resultados.
+
+\vspace{4mm}
+
+Finalmente, se ha estudiado el conjunto de datos siguiendo un modelo de regresión logística. Se trata de un modelo estadístico que permite analizar relaciones entre una o más variables independientes y una variable dependiente categórica binaria. Específicamente, este modelo estima la probabilidad de que ocurra un evento de interés frente a su suceso complementario.
+
+# Resultados y discusión
+
+## Análisis Discriminante Lineal (LDA). 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(summarytools)
+library(ggpubr)
+library(ggplot2)
+library(factoextra)
+library(scatterplot3d)
+library(foreign)
+# Package required to call 'scatterplot3d' function
+library(scatterplot3d)
+# Package required to call 'melt' function
+library(reshape2)
+# Package required to call 'mvn' function
+library(MVN)
+# Package required to call 'boxM' function
+library(biotools)
+# Package required to call 'partimat' function
+library(klaR)
+# Package required to call 'summarise' function
+library(dplyr)
+# Package required to call 'createDataPartition' function
+library(caret)
+primaria<-read.spss("Burnout_EBAP_20_22_IJERPH.sav", to.data.frame=TRUE)
+#gestoras<-read.spss("Burnout_gestoras_15_22_JPM.sav", to.data.frame=TRUE)
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#primaria<-primaria[,-c(27,29,30)] #Eliminamos las columnas con muchos NAN y servicio2, que no aporta.
+primaria<-primaria[,-25]
+#Eliminamos la columna de Pacientes de 60 años por tener todo NA
+
+primaria<-primaria[,-28]
+
+#Eliminamos las columnas relacionadas con las preguntas.
+
+primaria<-primaria[,1:28]
+
+
+
+#Hacemos factores las columnas
+
+primaria[, c("MBI_CE_Cat", "MBI_D_Cat","MBI_RP_Cat","Sexo","Servicio","Turno_Cat","Guardias","Puesto_trabajo","Estado_Civil_Cat","Num_hijos_Cat","Categoría","Provincia","Estado_Civil","Turno","Nombre","Gestíon","Ocupó_gestión")] <- lapply(primaria[, c("MBI_CE_Cat", "MBI_D_Cat","MBI_RP_Cat","Sexo","Servicio","Turno_Cat","Guardias","Puesto_trabajo","Estado_Civil_Cat","Num_hijos_Cat","Categoría","Provincia","Estado_Civil","Turno","Nombre","Gestíon","Ocupó_gestión")], as.factor)
+
+library(psych)
+data(primaria)
+describe(primaria)[,-c(6:8,13)]
+
+```
+
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#Codificamos todo
+#Para las respuestas Bajo medio alto se asigna el 1,2,3. 
+cols_MBI=c("MBI_CE_Cat", "MBI_D_Cat","MBI_RP_Cat")
+primaria[,cols_MBI]<-lapply(primaria[,cols_MBI],factor,level=c("Bajo","Medio","Alto"),labels=c(1,2,3))
+
+#Para el numero de hijos asigno cada numero segun el numero de hijos
+
+primaria$Num_hijos_Cat<-factor(primaria$Num_hijos_Cat,level=c("Sin hijos","Un hijo","Dos hijos","Familia Numerosa"),labels=c(0,1,2,3))
+
+#Para las columnas con respuestas Hombre/Mujer, Casado/soltero, etc se asignan los numeros de menor a mayor por orden alfabetico.
+
+primaria$Sexo<-factor(primaria$Sexo,level=c("Hombre","Mujer"),labels=c(1,2))
+
+primaria$Servicio<-factor(primaria$Servicio,levels=sort(levels(primaria$Servicio)))
+
+primaria$Turno_Cat<-factor(primaria$Turno_Cat,levels=sort(levels(primaria$Turno_Cat)))
+
+primaria$Guardias<-factor(primaria$Guardias,levels=sort(levels(primaria$Guardias)))
+
+primaria$Puesto_trabajo<-factor(primaria$Puesto_trabajo,levels=sort(levels(primaria$Puesto_trabajo)))
+
+primaria$Estado_Civil_Cat<-factor(primaria$Estado_Civil_Cat,levels=sort(levels(primaria$Estado_Civil_Cat)))
+
+primaria$Num_hijos_Cat<-factor(primaria$Num_hijos_Cat,levels=sort(levels(primaria$Num_hijos_Cat)))
+
+primaria$Categoría<-factor(primaria$Categoría,levels=sort(levels(primaria$Categoría)))
+
+primaria$Provincia<-factor(primaria$Provincia,levels=sort(levels(primaria$Provincia)))
+
+primaria$Estado_Civil<-factor(primaria$Estado_Civil,levels=sort(levels(primaria$Estado_Civil)))
+
+primaria$Turno<-factor(primaria$Turno,levels=sort(levels(primaria$Turno)))
+
+primaria$Nombre<-factor(primaria$Nombre,levels=sort(levels(primaria$Nombre)))
+
+primaria$Gestíon<-factor(primaria$Gestíon, levels=sort(levels(primaria$Gestíon)))
+
+primaria$Ocupó_gestión<-factor(primaria$Ocupó_gestión, levels=sort(levels(primaria$Ocupó_gestión)))
+
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Funcion para arreglar los datos NA de tiempo de gestion en concreto
+not_available_tiempogestion<-function(data,na.rm=F){
+data[is.na(data)]<- 0
+data
+}
+# Funcion por si alguien NA en gestion o ocupo gestion
+not_available_gestion<-function(data,na.rm=F){
+data[is.na(data)]<- 'No' #¿Aqui por que no funciona si pongo la mode(data) o median(data)??
+data
+}
+
+
+moda <- function(x) {
+  ux <- unique(na.omit(x))  # Valores únicos, eliminando NA
+  ux[which.max(tabulate(match(x, ux)))]  # El valor con mayor frecuencia
+}
+
+not_available_hijos <- function(data) {
+  moda_valor <- moda(data)  # Calculamos la moda
+  data[is.na(data)] <- moda_valor  # Reemplazamos NA con la moda
+  return(data)  # Devolvemos la columna modificada
+}
+primaria$Num_hijos_Cat <- not_available_hijos(primaria$Num_hijos_Cat)
+primaria$Numero_hijos <- not_available_hijos(primaria$Numero_hijos)
+
+
+cols_tgestion<-c('Tiempo_gestión','Tiempo_ocupó_gestión')
+cols_gestion<-c('Gestíon','Ocupó_gestión')
+#primaria[,cols_gestion]
+
+#Ahora tocaria aplicar estas funciones a las columnas adecuadas
+
+primaria[,cols_tgestion]<-lapply(primaria[,cols_tgestion],not_available_tiempogestion)
+primaria[,cols_gestion]<-lapply(primaria[,cols_gestion],not_available_gestion)
+
+#Ahora cambiar los valores no nulos que hayan puesto que no, en un Si
+primaria[primaria$Tiempo_gestión!=0,'Gestíon'] <-'Sí'
+
+#primaria[,c(cols_gestion,cols_tgestion)]
+
+```
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+primaria$MBI_CE_Cat <- factor(primaria$MBI_CE_Cat,levels=c(1,2,3),labels=c("Bajo","Medio","Alto"))
+p1<-ggplot(primaria,aes(x=factor(1),fill=MBI_CE_Cat))+geom_bar()+
+coord_polar("y")+labs(x="MBI CE",y="Valores")
+p2<-ggplot(primaria,aes(x=factor(1),fill=MBI_CE_Cat))+geom_bar()+
+labs(x="MBI CE ",y="Valores")
+g1<-ggarrange(p1,p2,nrow = 1,ncol=2, common.legend = TRUE)
+
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+primaria$MBI_D_Cat <- factor(primaria$MBI_D_Cat,levels=c(1,2,3),labels=c("Bajo","Medio","Alto"))
+p1<-ggplot(primaria,aes(x=factor(1),fill=MBI_D_Cat))+geom_bar()+
+coord_polar("y")+labs(x="MBI D",y="Valores")
+p2<-ggplot(primaria,aes(x=factor(1),fill=MBI_D_Cat))+geom_bar()+
+labs(x="MBI D",y="Valores")
+g2<-ggarrange(p1,p2,nrow = 1,ncol=2, common.legend = TRUE)
+
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+primaria$MBI_RP_Cat <- factor(primaria$MBI_RP_Cat,levels=c(1,2,3),labels=c("Bajo","Medio","Alto"))
+p1<-ggplot(primaria,aes(x=factor(1),fill=MBI_RP_Cat))+geom_bar()+
+coord_polar("y")+labs(x="MBI RP",y="Valores")
+p2<-ggplot(primaria,aes(x=factor(1),fill=MBI_RP_Cat))+geom_bar()+
+labs(x="MBI RP",y="Valores")
+g3<-ggarrange(p1,p2,nrow = 1,ncol=2, common.legend = TRUE)
+
+```
+
+```{r,echo=FALSE}
+ggarrange(g1,g2,g3,ncol=2,nrow=2)
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+attach(primaria)
+#Primero para MBI CE 
+p1 <- ggplot(data = primaria, aes(x = Neur_NEOFFI, fill = MBI_CE_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p2 <- ggplot(data = primaria, aes(x = Amab_NEOFFI, fill = MBI_CE_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p3 <- ggplot(data = primaria, aes(x = Resp_NEOFFI, fill = MBI_CE_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p4 <- ggplot(data = primaria, aes(x = Extrav_NEOFFI, fill = MBI_CE_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p5 <- ggplot(data = primaria, aes(x = Apert_NEOFFI, fill = MBI_CE_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+
+g1<-ggarrange(p1, p2, p3,p4,p5, nrow = 3,ncol = 2, common.legend = TRUE, top = "Clas. individual según el MBI_CE")
+
+#Ahora para MBI D
+
+p1 <- ggplot(data = primaria, aes(x = Neur_NEOFFI, fill = MBI_D_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p2 <- ggplot(data = primaria, aes(x = Amab_NEOFFI, fill = MBI_D_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p3 <- ggplot(data = primaria, aes(x = Resp_NEOFFI, fill = MBI_D_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p4 <- ggplot(data = primaria, aes(x = Extrav_NEOFFI, fill = MBI_D_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p5 <- ggplot(data = primaria, aes(x = Apert_NEOFFI, fill = MBI_D_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+
+g2<-ggarrange(p1, p2, p3,p4,p5, nrow = 3,ncol = 2, common.legend = TRUE, top= "Clas. individual para el MBI_D")
+
+ggarrange(g1,g2,ncol=2,nrow=1)
+
+#Finalmente para MBI RP
+p1 <- ggplot(data = primaria, aes(x = Neur_NEOFFI, fill = MBI_RP_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p2 <- ggplot(data = primaria, aes(x = Amab_NEOFFI, fill = MBI_RP_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p3 <- ggplot(data = primaria, aes(x = Resp_NEOFFI, fill = MBI_RP_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p4 <- ggplot(data = primaria, aes(x = Extrav_NEOFFI, fill = MBI_RP_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p5 <- ggplot(data = primaria, aes(x = Apert_NEOFFI, fill = MBI_RP_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+
+g3<-ggarrange(p1, p2, p3,p4,p5, nrow = 3,ncol = 2, common.legend = TRUE, top= "Clas. individual para el MBI_RP")
+ggarrange(g3,ncol=2,nrow=1)
+```
+
+
+
+
+En primer lugar se representan los histogramas de las variables de  personalidad para cada uno de los síntomas del Burnout. Las variables que nos permiten separar los valores altos de Cansancio Emocional y Despersonalización, y los valores bajos de Realización Personal serán buenos clasificadores, y para ello un primer análisis exploratorio visual es procedente.
+
+Observando detenidamente dichos histogramas, se deduce que las variables que en un primer análisis servirán para clasificar son:
+
+-Para Cansancio Emocional: Neuroticismo, Extraversión y Amabilidad.
+
+-Para Despersonalización: Neuroticismo, Amabilidad y Responsabilidad. 
+
+-Para Realización Personal: Amabilidad, Extraversión y Responsabilidad.
+
+Una vez hecho esto, realizaremos representaciones de puntos bivariadas y trivariadas, tomando como ternas de variables aquellas que separaron bien los valores sobre el histograma. De estas, podemos observar que las variables carecen de relación entre ellas.
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pairs(x = primaria[, c("Neur_NEOFFI","Amab_NEOFFI","Resp_NEOFFI","Extrav_NEOFFI","Apert_NEOFFI")],
+col = c("green", "red", "purple")[primaria$MBI_RP_Cat], pch = 19)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pairs(x = primaria[, c("Neur_NEOFFI","Amab_NEOFFI","Resp_NEOFFI","Extrav_NEOFFI","Apert_NEOFFI")],
+col = c("green", "red", "purple")[primaria$MBI_D_Cat], pch = 19)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pairs(x = primaria[, c("Neur_NEOFFI","Amab_NEOFFI","Resp_NEOFFI","Extrav_NEOFFI","Apert_NEOFFI")],
+col = c("green", "red", "purple")[primaria$MBI_CE_Cat], pch = 19)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#Tridimensional caso 1 para cansancio emocional
+
+#scatterplot3d(Neur_NEOFFI, Resp_NEOFFI, #Amab_NEOFFI,
+#color = c("green", "red", #"purple")[MBI_CE_Cat], pch = 19,
+#grid = TRUE, xlab = "Neuroticismo", ylab = #"Responsabilidad",
+#zlab = "Amabilidad", angle = 65, cex.axis = #0.6)
+#legend("topleft",
+#bty = "n", cex = 0.8,
+#title = "Cansancio Emocional",
+#c("1-Bajo", "2-Medio", "3-Alto"), fill = #c("green", "red", "purple"))
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#Tridimensional caso 2 para cansancio emocional
+#scatterplot3d(Neur_NEOFFI, Extrav_NEOFFI, Amab_NEOFFI,
+#color = c("green", "red", #"purple")[MBI_CE_Cat], pch = 19,
+#grid = TRUE, xlab = "Neuroticismo", ylab = #"Extraversión",
+#zlab = "Amabilidad", angle = 65, cex.axis = #0.6)
+#legend("topleft",
+#bty = "n", cex = 0.8,
+#title = "Cansancio Emocional",
+#c("1-Bajo", "2-Medio", "3-Alto"), fill = #c("green", "red", "purple"))
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#Tridimensional Despersonalización
+#scatterplot3d(Neur_NEOFFI, Resp_NEOFFI, #Amab_NEOFFI,
+#color = c("green", "red", #"purple")[MBI_CE_Cat], pch = 19,
+#grid = TRUE, xlab = "Neuroticismo", ylab = #"Responsabilidad",
+#zlab = "Amabilidad", angle = 65, cex.axis = #0.6)
+#legend("topleft",
+#bty = "n", cex = 0.8,
+#title = "Despersonalización",
+#c("1-Bajo", "2-Medio", "3-Alto"), fill = #c("green", "red", "purple"))
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#Tridimensional Responsabilidad
+#scatterplot3d(Extrav_NEOFFI, Resp_NEOFFI, #Amab_NEOFFI,
+#color = c("green", "red", #"purple")[MBI_CE_Cat], pch = 19,
+#grid = TRUE, xlab = "Extraversión", ylab = #"Responsabilidad",
+#zlab = "Amabilidad", angle = 65, cex.axis = #0.6)
+#legend("topleft",
+#bty = "n", cex = 0.8,
+#title = "Responsabilidad",
+#c("1-Bajo", "2-Medio", "3-Alto"), fill = #c("green", "red", "purple"))
+```
+
+Al representar los histogramas univariantes y los gráficos qqplot, se observa que las variables siguen distribuciones normales. Además, al emplear el test de Shapiro-Wilk no se encuentran evidencias de falta de normalidad, pues en la mayoría de casos el p-valor es mayor que 0.05.
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#Hacemos analisis outliers aunque pensamos que no varia mucho
+#outliers <- mvn(data = primaria[,c(4:8)], mvnTest = "hz", multivariateOutlierMethod = "quan")
+
+#Test de Royston
+#royston_test <- mvn(data = primaria[,c(4:8)], mvnTest = "royston", multivariatePlot = "qq")
+
+#Test de HZ
+#hz_test <- mvn(data = primaria[,c(4:8)], mvnTest = "hz")
+
+```
+Al utilizar el test de Royston y el de Henze-Zirckler para la normalidad multivariante, se obtiene que los datos no siguen una normal multivariante.
+
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+#Tenemos 5 predictores (las 5 de personalidad) asi que hacemos el Box M test
+#boxM(data = primaria[, 4:8], grouping = primaria[, 1])
+#boxM(data = primaria[, 4:8], grouping = primaria[, 2])
+#boxM(data = primaria[, 4:8], grouping = primaria[, 3])
+```
+
+En cuanto a la homogeneidad de la varianza, como se tienen múltiples predictores, se utiliza el test Box M. En todos los casos se tiene un p-valor por encima de 0.001, por lo que no se tienen evidencias para rechazar la hipótesis nula y, por lo tanto, asumimos la homogeneidad de varianzas y empleamos el análisis discriminante lineal. 
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#modelo_ldaCECateg <- lda(formula = MBI_CE_Cat ~ Edad+Sexo+Antigüedad_profesión+Antigüedad_puesto+Turno_Cat+Guardias+Estado_Civil_Cat+Gestíon+Tiempo_gestión+Ocupó_gestión+Tiempo_ocupó_gestión,data = primaria)
+
+#OJO, ME ESTA DANDO UN ERROR AL METER COMO VARIABLE EL NUMERO DE HIJOS, ESTO SIGNIFICA QUE NO TIENE IMPORTANCIA EL NUMERO DE HIJOS RESPECTO A LA VARIABLE CE, YA QUE DICE QUE ES CONSTANTE.
+
+#modelo_ldaDCateg <- lda(formula = MBI_D_Cat ~ Edad+Sexo+Antigüedad_profesión+Antigüedad_puesto+Turno_Cat+Guardias+Estado_Civil_Cat+Gestíon+Tiempo_gestión+Ocupó_gestión+Tiempo_ocupó_gestión,data = primaria)
+
+#ME OCURRE LO MISMO EN ESTA CON EL NUM DE HIJOS
+
+#modelo_ldaRPCateg <- lda(formula = MBI_RP_Cat ~ Edad+Sexo+Antigüedad_profesión+Antigüedad_puesto+Turno_Cat+Guardias+Estado_Civil_Cat+Gestíon+Tiempo_gestión+Ocupó_gestión+Tiempo_ocupó_gestión,data = primaria)
+
+#Y EN ESTA IGUAL, POR ESO NO APARECE EN NINGUNA, PORQUE ME DA EL ERROR Y TENGO QUE QUITARLAS.
+#HEMOS QUITADO LA VARIABLE PUESTO_TRABAJO PORQUE LA DESVIACIÓN TÍPICA ES MUY CERCANA A CERO
+#Y PRACTICAMENTE TODAS LAS OBSERVACIONES SON ATENCION PRIMARIA, EL MUESTREO DE ESTA VARIABLE NO ES EL ADECUADO PARA ESTUDIARLA.
+
+```
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#modelo_ldaCETotal <- lda(formula = MBI_CE_Cat ~ Neur_NEOFFI+Amab_NEOFFI+Extrav_NEOFFI+Resp_NEOFFI+Apert_NEOFFI+Edad+Sexo+Antigüedad_profesión+Antigüedad_puesto+Turno_Cat+Guardias+Estado_Civil_Cat+Gestíon+Tiempo_gestión+Ocupó_gestión+Tiempo_ocupó_gestión,data = primaria)
+
+# Extraer la matriz de coeficientes (scaling) y convertirla en data.frame
+#scaling_df <- as.data.frame(modelo_ldaCETotal$scaling)
+
+# Añadir los nombres de las variables como columna
+#scaling_df$Variable <- rownames(scaling_df)
+
+# Reordenar el data.frame por los valores de LD1 de mayor a menor
+#scaling_ordered <- scaling_df[order(scaling_df$LD1, decreasing = TRUE), ]
+
+
+#modelo_ldaDTotal <- lda(formula = MBI_D_Cat ~ Neur_NEOFFI+Amab_NEOFFI+Extrav_NEOFFI+Resp_NEOFFI+Apert_NEOFFI+Edad+Sexo+Antigüedad_profesión+Antigüedad_puesto+Turno_Cat+Guardias+Estado_Civil_Cat+Gestíon+Tiempo_gestión+Ocupó_gestión+Tiempo_ocupó_gestión,data = primaria)
+
+# Extraer la matriz de coeficientes (scaling) y convertirla en data.frame
+#scaling_df <- as.data.frame(modelo_ldaDTotal$scaling)
+
+# Añadir los nombres de las variables como columna
+#scaling_df$Variable <- rownames(scaling_df)
+
+# Reordenar el data.frame por los valores de LD1 de mayor a menor
+#scaling_ordered <- scaling_df[order(scaling_df$LD1, decreasing = TRUE), ]
+
+
+
+
+#modelo_ldaRPTotal <- lda(formula = MBI_RP_Cat ~ Neur_NEOFFI+Amab_NEOFFI+Extrav_NEOFFI+Resp_NEOFFI+Apert_NEOFFI+Edad+Sexo+Antigüedad_profesión+Antigüedad_puesto+Turno_Cat+Guardias+Estado_Civil_Cat+Gestíon+Tiempo_gestión+Ocupó_gestión+Tiempo_ocupó_gestión,data = primaria)
+
+# Extraer la matriz de coeficientes (scaling) y convertirla en data.frame
+#scaling_df <- as.data.frame(modelo_ldaRPTotal$scaling)
+
+# Añadir los nombres de las variables como columna
+#scaling_df$Variable <- rownames(scaling_df)
+
+# Reordenar el data.frame por los valores de LD1 de mayor a menor
+#scaling_ordered <- scaling_df[order(scaling_df$LD1, decreasing = TRUE), ]
+
+
+```
+
+Aplicando el discriminante lineal a las variables de personalidad, se obtiene en todos los casos que el primer discriminante lineal es mucho mayor que el segundo y, por tanto, tiene mucha más fuerza. Además, las variables con mayor valor (en valor absoluto) coinciden con las variables que mejor separaban sobre el histograma de frecuencias multivariante.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+modelo_ldaCE <- lda(formula = MBI_CE_Cat ~ Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI+ Extrav_NEOFFI+ Apert_NEOFFI,data = primaria)
+
+
+modelo_ldaD <- lda(formula = MBI_D_Cat ~ Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI+ Extrav_NEOFFI+ Apert_NEOFFI,data = primaria)
+
+
+modelo_ldaRP <- lda(formula = MBI_RP_Cat ~ Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI+ Extrav_NEOFFI+ Apert_NEOFFI,data = primaria)
+```
+
+Ahora comprobaremos los pesos correspondientes para cada variable del Burnout (MBI), para ello, ordenaremos los valores absolutos obtenidos correspondientes a cada variable de la personalidad de los modelos, ya que estos indican el peso de separación de las variables.
+
+Para el Cansancio Emocional:
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Extraer la matriz de coeficientes (scaling) y convertirla en data.frame
+scaling_df <- as.data.frame(modelo_ldaCE$scaling)
+
+# Añadir los nombres de las variables como columna
+scaling_df$Variable <- rownames(scaling_df)
+
+# Reordenar el data.frame por los valores de LD1 de mayor a menor
+scaling_ordered <- scaling_df[order(abs(scaling_df$LD1), decreasing = TRUE), ]
+
+print("Coeficientes del LDA ordenados por valor absoluto:")
+result<-scaling_ordered[,c("LD1"),drop=FALSE]
+print(result)
+```
+Se deduce que las variables más influyentes en la clasificación del MBI son, en orden, el Neuroticismo, la Extraversión y la Amabilidad. Estas coinciden con las propuestas para clasificación en el análisis exploratorio.
+
+Para la Despersonalización:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+
+# Extraer la matriz de coeficientes (scaling) y convertirla en data.frame
+scaling_df <- as.data.frame(modelo_ldaD$scaling)
+
+# Añadir los nombres de las variables como columna
+scaling_df$Variable <- rownames(scaling_df)
+
+# Reordenar el data.frame por los valores de LD1 de mayor a menor
+scaling_ordered <- scaling_df[order(abs(scaling_df$LD1), decreasing = TRUE), ]
+
+# Mostrar la tabla ordenada
+print("Coeficientes del LDA ordenados por valor absoluto:")
+result<-scaling_ordered[,c("LD1"),drop=FALSE]
+print(result)
+
+```
+En este caso, las variables serían la Amabilidad, el Neuroticismo y la Responsabilidad. De nuevo, coinciden con las previstas.
+
+
+Finalmente, para la Realización Personal:
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+
+
+# Extraer la matriz de coeficientes (scaling) y convertirla en data.frame
+scaling_df <- as.data.frame(modelo_ldaRP$scaling)
+
+# Añadir los nombres de las variables como columna
+scaling_df$Variable <- rownames(scaling_df)
+
+# Reordenar el data.frame por los valores de LD1 de mayor a menor
+scaling_ordered <- scaling_df[order(abs(scaling_df$LD1), decreasing = TRUE), ]
+
+# Mostrar la tabla ordenada
+print("Coeficientes del LDA ordenados por valor absoluto:")
+result<-scaling_ordered[,c("LD1"),drop=FALSE]
+print(result)
+```
+En este caso, las variables con mayor peso son Responsabilidad, Amabilidad y Extraversión. Vuelven a coincidir con las vistas en los histogramas iniciales.
+
+
+Se continúa hallando los errores de los modelos lineales correspondientes a cada variable, para ver cómo de acertado es el modelo lineal discriminante en estos casos.
+
+Para el Cansancio Emocional:
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pred <- predict(modelo_ldaCE, dimen = 2)
+training_errorCE<-mean(primaria$MBI_CE_Cat != pred$class) * 100
+paste("training_errorCE=", training_errorCE, "%")
+```
+Observamos un error del 36,82%, relativamente elevado. Esto quiere decirnos que el modelo se equivoca en predecir el nivel de Cansancio Emocional de una persona a través de las variables de la personalidad el 37% de las veces.
+
+Para la Despersonalización.
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pred <- predict(modelo_ldaD, dimen = 2)
+training_errorD<-mean(primaria$MBI_D_Cat != pred$class) * 100
+paste("training_errorD=", training_errorD, "%")
+```
+
+
+Y finalmente para la Realización Personal:
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pred <- predict(modelo_ldaRP, dimen = 2)
+
+training_errorRP<-mean(primaria$MBI_RP_Cat != pred$class) * 100
+paste("training_errorRP=", training_errorRP, "%")
+```
+
+El modelo con las variables de personalidad se equivoca entre el 36% y el 45%. Este error es muy alto, por lo que no podemos emplear el modelo para predecir, pero sí que podemos intuir cuáles son las variables más influyentes en el Burnout. Por otro lado, el error en el modelo al considerar la totalidad de las variables es aun mayor, equivocándose más de la mitad de las veces. De esta forma, descartamos el modelo obtenido al utilizar todas las variables.
+
+A continuación y para finalizar con esta sección, veremos las gráficas de partición de estos modelos, pudiendo apreciar visualmente tanto los aciertos como los errores, indicando con colores los niveles predichos según el modelo dentro de las variables de Burnout (MBI), y con "A", "M" y "B" los niveles correspondientes a dichas variables según los datos. Aquellos que estén en rojo indican un error de predicción por parte del modelo.
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+partimat(MBI_CE_Cat ~Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI+ Extrav_NEOFFI+ Apert_NEOFFI ,
+data = primaria, method = "lda", prec = 200,
+image.colors = c("green", "orange","blue"),
+col.mean = "yellow",nplots.vert =2, nplots.hor=5, main= "Partition plot for MBI_CE")
+
+partimat(MBI_D_Cat ~Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI+ Extrav_NEOFFI+ Apert_NEOFFI ,
+data = primaria, method = "lda", prec = 200,
+image.colors = c("green", "orange","blue"),
+col.mean = "yellow",nplots.vert =2, nplots.hor=5,main= "Partition plot for MBI_D")
+
+partimat(MBI_RP_Cat ~Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI+ Extrav_NEOFFI+ Apert_NEOFFI ,
+data = primaria, method = "lda", prec = 200,
+image.colors = c("green", "orange","blue"),
+col.mean = "yellow",nplots.vert =2, nplots.hor=5,main= "Partition plot for MBI_RP")
+```
+
+
+
+
+Por último, realizamos el modelo de nuevo, eliminando los valores bajos para Cansancio Emocional y Despersonalización, y los altos para Realización Personal. Esto se debe a que el Burnout comienza a presentarse en una persona cuando los niveles de Cansancio Emocional y Despersonalización son altos, y los de Realización Personal bajos. Es por ello que hay especial interés en conseguir clasificar de forma específica estos niveles.
+
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#Cansancio Emocional
+MBI_CE_BM=vector() #Vector Bajo-Medio
+MBI_CE_BM=primaria[primaria$MBI_CE_Cat!="Alto",]
+MBI_CE_BM$MBI_CE_Cat <- factor(MBI_CE_BM$MBI_CE_Cat, levels = c("Bajo", "Medio"), labels = c("B", "M"))
+
+MBI_CE_MA=vector()#Vector Medio-Alto
+MBI_CE_MA=primaria[primaria$MBI_CE_Cat!="Bajo",]
+MBI_CE_MA$MBI_CE_Cat <- factor(MBI_CE_MA$MBI_CE_Cat, levels = c("Medio", "Alto"), labels = c("M", "A"))
+
+#Realización Personal
+MBI_RP_BM=vector() #Vector Bajo-Medio
+MBI_RP_BM=primaria[primaria$MBI_RP_Cat!="Alto",]
+MBI_RP_BM$MBI_RP_Cat <- factor(MBI_RP_BM$MBI_RP_Cat, levels = c("Bajo", "Medio"), labels = c("B", "M"))
+
+MBI_RP_MA=vector()#Vector Medio-Alto
+MBI_RP_MA=primaria[primaria$MBI_RP_Cat!="Bajo",]
+MBI_RP_MA$MBI_RP_Cat <- factor(MBI_RP_MA$MBI_RP_Cat, levels = c("Medio", "Alto"), labels = c("M", "A"))
+
+#Despersonalización
+MBI_D_BM=vector() #Vector Bajo-Medio
+MBI_D_BM=primaria[primaria$MBI_D_Cat!="Alto",]
+MBI_D_BM$MBI_D_Cat <- factor(MBI_D_BM$MBI_D_Cat, levels = c("Bajo", "Medio"), labels = c("B", "M"))
+
+MBI_D_MA=vector()#Vector Medio-Alto
+MBI_D_MA=primaria[primaria$MBI_D_Cat!="Bajo",]
+MBI_D_MA$MBI_D_Cat <- factor(MBI_D_MA$MBI_D_Cat, levels = c("Medio", "Alto"), labels = c("M", "A"))
+
+
+
+```
+
+Se representan a continuación los histogramas de las variables en este caso, así como los gráficos bivariados, lo que nos permite ver de forma gráfica que efectivamente los rasgos de personalidad obtenidos son los que nos permiten separar mejor los valores medios de los altos para cada síntoma del Burnout.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+
+#Primero para MBI CE 
+p1 <- ggplot(data = MBI_CE_MA, aes(x = Neur_NEOFFI, fill = MBI_CE_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p2 <- ggplot(data = MBI_CE_MA, aes(x = Amab_NEOFFI, fill = MBI_CE_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p3 <- ggplot(data = MBI_CE_MA, aes(x = Resp_NEOFFI, fill = MBI_CE_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p4 <- ggplot(data = MBI_CE_MA, aes(x = Extrav_NEOFFI, fill = MBI_CE_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p5 <- ggplot(data = MBI_CE_MA, aes(x = Apert_NEOFFI, fill = MBI_CE_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+
+g1<-ggarrange(p1, p2, p3,p4,p5, nrow = 3,ncol = 2, common.legend = TRUE, top = "Clas. individual según el MBI_CE")
+
+#Ahora para MBI D
+
+p1 <- ggplot(data = MBI_D_MA, aes(x = Neur_NEOFFI, fill = MBI_D_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p2 <- ggplot(data = MBI_D_MA, aes(x = Amab_NEOFFI, fill = MBI_D_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p3 <- ggplot(data = MBI_D_MA, aes(x = Resp_NEOFFI, fill = MBI_D_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p4 <- ggplot(data = MBI_D_MA, aes(x = Extrav_NEOFFI, fill = MBI_D_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p5 <- ggplot(data = MBI_D_MA, aes(x = Apert_NEOFFI, fill = MBI_D_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+
+g2<-ggarrange(p1, p2, p3,p4,p5, nrow = 3,ncol = 2, common.legend = TRUE, top= "Clas. individual para el MBI_D")
+
+#Finalmente para MBI RP
+p1 <- ggplot(data = MBI_RP_BM, aes(x = Neur_NEOFFI, fill = MBI_RP_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p2 <- ggplot(data = MBI_RP_BM, aes(x = Amab_NEOFFI, fill = MBI_RP_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p3 <- ggplot(data = MBI_RP_BM, aes(x = Resp_NEOFFI, fill = MBI_RP_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p4 <- ggplot(data = MBI_RP_BM, aes(x = Extrav_NEOFFI, fill = MBI_RP_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+p5 <- ggplot(data = MBI_RP_BM, aes(x = Apert_NEOFFI, fill = MBI_RP_Cat)) +
+geom_histogram(position = "identity", alpha = 0.5)
+
+g3<-ggarrange(p1, p2, p3,p4,p5, nrow = 3,ncol = 2, common.legend = TRUE, top= "Clas. individual para el MBI_RP")
+
+ggarrange(g1,g2,ncol=2,nrow=1)
+ggarrange(g3,ncol=2,nrow=1)
+```
+
+Como puede observarse, en el caso del Cansancio Emocional, se observa en los histogramas una clara tendencia que asocia niveles altos de esta dimensión del Burnout con puntuaciones más elevadas en el rasgo del Neuroticismo. Esto implica que personas más dadas a tener Neuroticismo tienen más probabilidades de experimentar Cansancio Emocional. Por otro lado, la variable Responsabilidad muestra un patrón inverso, es decir, los que tienen mayor nivel de Responsabilidad tienen menos probabilidad de experimentar altos niveles de Cansancio Emocional.
+
+En relación con la Despersonalización, los histogramas reflejan un patrón similar al observado con el Cansancio Emocional. Las personas con altos niveles de Despersonalización también tienden a tener mayor nivel de Neuroticismo. Además, se puede observar que la variable Amabilidad también tiene influencia sobre la Despersonalización, pero no tan marcada como ocurre con el Neuroticismo.
+
+Finalmente, en cuanto a la Realización Personal, las personas con niveles bajos de esta variable suelen tener altos niveles de Neuroticismo y bajos niveles de Responsabilidad y Extraversión. En general, el análisis de los histogramas refleja que el Neuroticismo se presenta como el principal factor de riesgo en el Burnout. Las personas con mayores niveles de Neuroticismo son más propensas por norma general a experimentar Cansancio Emocional, Despersonalización y baja Realización Personal.
+
+A continuación se presentan los gráficos bivariados.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pairs(x = MBI_CE_MA[, c("Neur_NEOFFI","Amab_NEOFFI","Resp_NEOFFI","Extrav_NEOFFI","Apert_NEOFFI")],
+col = c("green", "red", "purple")[MBI_CE_MA$MBI_CE_Cat], pch = 19)
+
+pairs(x = MBI_D_MA[, c("Neur_NEOFFI","Amab_NEOFFI","Resp_NEOFFI","Extrav_NEOFFI","Apert_NEOFFI")],
+col = c("green", "red", "purple")[MBI_D_MA$MBI_D_Cat], pch = 19)
+
+pairs(x = MBI_RP_BM[, c("Neur_NEOFFI","Amab_NEOFFI","Resp_NEOFFI","Extrav_NEOFFI","Apert_NEOFFI")],
+col = c("green", "red", "purple")[MBI_RP_BM$MBI_RP_Cat], pch = 19)
+
+```
+
+
+Los gráficos bivariados muestran patrones en los que el Neuroticismo aparece como el principal factor de riesgo del Burnout, pues los puntos que representan altos niveles de Burnout (en rojo) se agrupan en los rangos altos de Neuroticismo. Por el contrario, la Responsabilidad y Extraversión actúan de forma opuesta, predominando los puntos de bajo Burnout (en verde) en los niveles altos de estas variables.
+
+Por otro lado, el impacto de la Amabilidad parece ser más moderado y la variable Apertura parece no influir significativamente en ninguno de los síntomas del Burnout. En conclusión, se ha observado gráficamente la misma tendencia que en el caso de los histogramas, siendo el Neuroticismo el principal factor de riesgo del Burnout.
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#outliers <- mvn(data = MBI_CE_MA[,c(4:8)], mvnTest = "hz", multivariateOutlierMethod = "quan")
+
+#outliers <- mvn(data = MBI_D_MA[,c(4:8)], mvnTest = "hz", multivariateOutlierMethod = "quan")
+
+#outliers <- mvn(data = MBI_RP_MA[,c(4:8)], mvnTest = "hz", multivariateOutlierMethod = "quan")
+
+```
+
+
+
+Dado que las variables, a pesar de haber modificado la base de datos, siguen siendo las mismas, no hay necesidad de hacer análisis con el que comprobar que siguen distribuciones normales univariadas, ya que esto fue comprobado previamente.
+
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+#Hacemos analisis outliers aunque pensamos que no varia mucho
+#outliers <- mvn(data = primaria[,c(4:8)], mvnTest = "hz", multivariateOutlierMethod = "quan")
+
+#Test de Royston
+royston_test <- mvn(data = MBI_CE_MA[,c(4:8)], mvnTest = "royston", multivariatePlot = "qq")
+#Test de HZ
+hz_test <- mvn(data = MBI_CE_MA[,c(4:8)], mvnTest = "hz")
+hz_test$multivariateNormality
+#Test de Royston
+royston_test <- mvn(data = MBI_D_MA[,c(4:8)], mvnTest = "royston", multivariatePlot = "qq")
+#Test de HZ
+hz_test <- mvn(data = MBI_D_MA[,c(4:8)], mvnTest = "hz")
+hz_test$multivariateNormality
+#Test de Royston
+royston_test <- mvn(data = MBI_RP_BM[,c(4:8)], mvnTest = "royston", multivariatePlot = "qq")
+#Test de HZ
+hz_test <- mvn(data = MBI_RP_BM[,c(4:8)], mvnTest = "hz")
+hz_test$multivariateNormality
+```
+
+```{r include=FALSE}
+#Tenemos 5 predictores (las 5 de personalidad) asi que hacemos el Box M test
+boxM(data = MBI_CE_MA[, 4:8], grouping = MBI_CE_MA[, 1])
+boxM(data = MBI_D_MA[, 4:8], grouping = MBI_D_MA[, 2])
+boxM(data = MBI_RP_BM[, 4:8], grouping = MBI_RP_BM[, 3])
+```
+
+Sin embargo, sí hemos de realizar tanto el test de Royston y como el de Henze-Zirckler para la normalidad multivariante, dado que se han modificado las relaciones totales entre variables. De aquí se obtiene que, mientras que el Cansancio Emocional sí que sigue una normal multivariante, la Despersonalización y la Realización Personal no. A pesar de esto, los valores de p obtenidos son mejores que en el caso anterior, por lo que es más adecuado realizarles un modelo LDA. Además, en todos los casos se tiene un p-valor por encima de 0.001, por lo que no se tienen evidencias para rechazar la hipótesis nula y, por lo tanto, asumimos la homogeneidad de varianzas.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+modelo_ldaCE_MA <- lda(formula = MBI_CE_Cat ~ Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI+ Extrav_NEOFFI+ Apert_NEOFFI,data = MBI_CE_MA)
+
+
+modelo_ldaD_MA <- lda(formula = MBI_D_Cat ~ Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI+ Extrav_NEOFFI+ Apert_NEOFFI,data = MBI_D_MA)
+
+
+modelo_ldaRP_BM <- lda(formula = MBI_RP_Cat ~ Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI+ Extrav_NEOFFI+ Apert_NEOFFI,data = MBI_RP_BM)
+
+
+```
+
+Los coeficientes del modelo son, para el Cansancio Emocional:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Extraer la matriz de coeficientes (scaling) y convertirla en data.frame
+scaling_df <- as.data.frame(modelo_ldaCE_MA$scaling)
+
+# Añadir los nombres de las variables como columna
+scaling_df$Variable <- rownames(scaling_df)
+
+# Reordenar el data.frame por los valores de LD1 de mayor a menor
+scaling_ordered <- scaling_df[order(abs(scaling_df$LD1), decreasing = TRUE), ]
+print("Coeficientes del LDA ordenados por valor absoluto:")
+result<-scaling_ordered[,c("LD1"),drop=FALSE]
+print(result)
+```
+
+Para la Despersonalización:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+# Extraer la matriz de coeficientes (scaling) y convertirla en data.frame
+scaling_df <- as.data.frame(modelo_ldaD_MA$scaling)
+
+# Añadir los nombres de las variables como columna
+scaling_df$Variable <- rownames(scaling_df)
+
+# Reordenar el data.frame por los valores de LD1 de mayor a menor
+scaling_ordered <- scaling_df[order(abs(scaling_df$LD1), decreasing = TRUE), ]
+
+print("Coeficientes del LDA ordenados por valor absoluto:")
+result<-scaling_ordered[,c("LD1"),drop=FALSE]
+print(result)
+```
+
+Y para la Realización Personal: 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Extraer la matriz de coeficientes (scaling) y convertirla en data.frame
+scaling_df <- as.data.frame(modelo_ldaRP_BM$scaling)
+
+# Añadir los nombres de las variables como columna
+scaling_df$Variable <- rownames(scaling_df)
+
+# Reordenar el data.frame por los valores de LD1 de mayor a menor
+scaling_ordered <- scaling_df[order(abs(scaling_df$LD1), decreasing = TRUE), ]
+
+print("Coeficientes del LDA ordenados por valor absoluto:")
+result<-scaling_ordered[,c("LD1"),drop=FALSE]
+print(result)
+
+```
+
+Se tiene, al dicotomizar las variables, que los rasgos de personalidad más influyentes son Neuroticismo, Extraversión y Apertura para el Cansancio Emocional; Responsabilidad, Neuroticismo y Amabilidad para la Despersonalización; y Neuroticismo, Extraversión y Amabilidad para la Realización Personal. 
+
+Se observa que no se corresponden exactamente a las obtenidas para las variables respuesta en tres niveles. Esto puede deberse a que ciertos rasgos de personalidad son muy útiles para clasificar niveles bajos de cierto síntoma, mientras que ahora estamos interesados en los niveles altos y viceversa. 
+
+Se hallan a continuación los errores de los modelos lineales en este caso:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pred <- predict(modelo_ldaCE_MA, dimen = 1)
+
+training_errorCE<-mean(MBI_CE_MA$MBI_CE_Cat != pred$class) * 100
+paste("training_errorCE=", training_errorCE, "%")
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pred <- predict(modelo_ldaD_MA, dimen = 1)
+
+training_errorD<-mean(MBI_D_MA$MBI_D_Cat != pred$class) * 100
+paste("training_errorD=", training_errorD, "%")
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pred <- predict(modelo_ldaRP_BM, dimen = 1)
+
+training_errorRP<-mean(MBI_RP_BM$MBI_RP_Cat != pred$class) * 100
+paste("training_errorRP=", training_errorRP, "%")
+
+```
+Se obtienen errores entre el 27% y el 35%, más bajos que los obtenidos anteriormente. 
+
+
+Por último, se realiza la gráfica de partición, como representación del error del modelo. 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+partimat(MBI_CE_Cat ~Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI+ Extrav_NEOFFI+ Apert_NEOFFI ,
+data = MBI_CE_MA, method = "lda", prec = 200,
+image.colors = c("green","blue"),
+col.mean = "yellow",nplots.vert =2, nplots.hor=5, main= "Partition plot for MBI_CE_MA")
+
+partimat(MBI_D_Cat ~Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI+ Extrav_NEOFFI+ Apert_NEOFFI ,
+data = MBI_D_MA, method = "lda", prec = 200,
+image.colors = c("green","blue"),
+col.mean = "yellow",nplots.vert =2, nplots.hor=5,main= "Partition plot for MBI_D_MA")
+
+partimat(MBI_RP_Cat ~Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI+ Extrav_NEOFFI+ Apert_NEOFFI ,
+data = MBI_RP_BM, method = "lda", prec = 200,
+image.colors = c("green","blue"),
+col.mean = "yellow",nplots.vert =2, nplots.hor=5,main= "Partition plot for MBI_RP_BM")
+```
+
+Veamos ahora qué ocurre al considerar, además de las variables de personalidad, el resto de las variables categóricas una vez tenemos los datos dicotomizados.
+
+
+Para el Cansancio Emocional:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+modelo_ldaCETotal_MA <- lda(formula = MBI_CE_Cat ~ Neur_NEOFFI+Amab_NEOFFI+Extrav_NEOFFI+Resp_NEOFFI+Apert_NEOFFI+Edad+Sexo+Antigüedad_profesión+Antigüedad_puesto+Turno_Cat+Guardias+Estado_Civil_Cat+Gestíon+Tiempo_gestión+Ocupó_gestión+Tiempo_ocupó_gestión,data = MBI_CE_MA)
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Extraer la matriz de coeficientes (scaling) y convertirla en data.frame
+scaling_df <- as.data.frame(modelo_ldaCETotal_MA$scaling)
+
+# Añadir los nombres de las variables como columna
+scaling_df$Variable <- rownames(scaling_df)
+
+# Reordenar el data.frame por los valores de LD1 de mayor a menor
+scaling_ordered <- scaling_df[order(abs(scaling_df$LD1), decreasing = TRUE), ]
+
+# Mostrar la tabla ordenada
+print("Coeficientes del LDA ordenados por valor absoluto:")
+result<-scaling_ordered[,c("LD1"),drop=FALSE]
+print(result)
+
+
+
+```
+
+Para la Despersonalización:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+modelo_ldaDTotal_MA <- lda(formula = MBI_D_Cat ~ Neur_NEOFFI+Amab_NEOFFI+Extrav_NEOFFI+Resp_NEOFFI+Apert_NEOFFI+Edad+Sexo+Antigüedad_profesión+Antigüedad_puesto+Turno_Cat+Guardias+Estado_Civil_Cat+Gestíon+Tiempo_gestión+Ocupó_gestión+Tiempo_ocupó_gestión,data = MBI_D_MA)
+
+
+# Extraer la matriz de coeficientes (scaling) y convertirla en data.frame
+scaling_df <- as.data.frame(modelo_ldaDTotal_MA$scaling)
+
+# Añadir los nombres de las variables como columna
+scaling_df$Variable <- rownames(scaling_df)
+
+# Reordenar el data.frame por los valores de LD1 de mayor a menor
+scaling_ordered <- scaling_df[order(abs(scaling_df$LD1), decreasing = TRUE), ]
+
+# Mostrar la tabla ordenada
+print("Coeficientes del LDA ordenados por valor absoluto:")
+result<-scaling_ordered[,c("LD1"),drop=FALSE]
+print(result)
+
+
+```
+
+
+Por último, para la Realización Personal:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+modelo_ldaRPTotal_BM <- lda(formula = MBI_RP_Cat ~ Neur_NEOFFI+Amab_NEOFFI+Extrav_NEOFFI+Resp_NEOFFI+Apert_NEOFFI+Edad+Sexo+Antigüedad_profesión+Antigüedad_puesto+Turno_Cat+Guardias+Estado_Civil_Cat+Gestíon+Tiempo_gestión+Ocupó_gestión+Tiempo_ocupó_gestión,data = MBI_RP_BM)
+
+# Extraer la matriz de coeficientes (scaling) y convertirla en data.frame
+scaling_df <- as.data.frame(modelo_ldaRPTotal_BM$scaling)
+
+# Añadir los nombres de las variables como columna
+scaling_df$Variable <- rownames(scaling_df)
+
+# Reordenar el data.frame por los valores de LD1 de mayor a menor
+scaling_ordered <- scaling_df[order(abs(scaling_df$LD1), decreasing = TRUE), ]
+
+# Mostrar la tabla ordenada
+print("Coeficientes del LDA ordenados por valor absoluto:")
+result<-scaling_ordered[,c("LD1"),drop=FALSE]
+print(result)
+
+
+
+```
+
+Al considerar la totalidad de las variables, se observa que las más influyentes en cada uno de los síntomas del Burnout no son las de personalidad. Esto no es un problema si se tiene en cuenta que, en el caso de las variables de personalidad, los pesos indican cómo varía la variable respuesta por incrementos unitarios de la variable de personalidad. Sin embargo, en el resto de variables esta interpretación literal no es adecuada, puesto que son variables categóricas y no numéricas y no se puede cuantificar la influencia de estas variables. 
+
+Podemos observar que las variables categóricas que más influyen son las guardias, el sexo y si ocupó u ocupa gestión. Sin embargo, cabe destacar que para ambas variables relacionadas con la gestión, solo un quinto de las observaciones tienen una respuesta afirmativa. Por tanto, no parece que la muestra sea la más adecuada y puede conducir a imprecisiones en el modelo. Además, como la variable sólo recoge si se ha realizado o no gestión (ídem para las guardias), tampoco podemos obtener información significativa en este modelo. De cara a futuras encuestas, podría ser interesante recoger información sobre el número de horas de guardias a la semana y tomar datos más precisos sobre la gestión. 
+
+Veamos el error del modelo en este caso:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pred <- predict(modelo_ldaCETotal_MA, dimen = 1)
+
+training_errorCETotal<-mean(MBI_CE_MA$MBI_CE_Cat != pred$class) * 100
+paste("training_errorCE_Total=", training_errorCETotal, "%")
+
+```
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pred <- predict(modelo_ldaDTotal_MA, dimen = 1)
+
+training_errorDTotal<-mean(MBI_D_MA$MBI_D_Cat != pred$class) * 100
+paste("training_errorD_Total=", training_errorDTotal, "%")
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+pred <- predict(modelo_ldaRPTotal_BM, dimen = 1)
+
+training_errorRPTotal<-mean(MBI_RP_BM$MBI_RP_Cat != pred$class) * 100
+paste("training_errorRP_Total=", training_errorRPTotal, "%")
+```
+El error se encuentra entre el 34% y el 40%. De esta forma, se tiene que este modelo se equivoca un número mayor de veces que el obtenido al considerar únicamente las variables de personalidad. 
+
+
+
+
+## Modelo Logit.
+
+A continuación, se realizará un modelo de regresión logística (logit) con el objetivo de analizar la relación entre las variables dependientes categóricas (Cansancio Emocional, Despersonalización y Realización Personal) y las variables independientes (Neuroticismo, Amabilidad, Responsabilidad, Extraversión y Apertura). Esto permitirá precedir qué rasgos de personalidad son más o menos relevantes en la explicación de los síntomas del Burnout.
+
+En primer lugar, se obtendrán para cada uno de los síntomas del Burnout, los valores de los coeficientes estimados ($\beta_i$) del modelo. Estos coeficientes determinarán la influencia de cada una de las variables independientes en las odds logarítmicas de que un individuo pertenezca a una categoría específica de la variable dependiente. 
+
+Si el coeficiente es positivo, un incremento en la variable independiente supone un incremento en la probabilidad de pertenecer al grupo de interés. Por el contrario, si el coefiente es negativo, un incremento en la variable independiente supone una disminución en la probabilidad de pertenecer al grupo de interés. El tamaño de los coeficientes indica la fuerza relativa con la que cada variable contribuye a la clasificación entre las categorías de la variable dependiente.
+
+
+Comenzamos definiendo el modelo logístico para cada uno de los síntomas del Burnout y obteniendo sus coeficientes correspondientes.
+
+Para el Cansancio Emocional:
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+modelo_logitCE <- glm(MBI_CE_Cat ~Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI + Extrav_NEOFFI + Apert_NEOFFI, 
+              family = binomial(link = "logit"), 
+              data = MBI_CE_MA)
+
+coeficientes <- coef(modelo_logitCE)
+
+# Ordenar los coeficientes por valor absoluto
+coef_ordenados <- coeficientes[order(abs(coeficientes), decreasing = TRUE)]
+
+# Mostrar los coeficientes ordenados
+#print("Coeficientes beta ordenados por valor absoluto:")
+#print(coef_ordenados)
+
+```
+Como puede observarse, el coeficiente con mayor valor absoluto se trata del asociado a la variable independiente Neuroticismo tomando un valor de $\beta$=0.09183424. Esto sugiere que el Neuroticismo es la variable con mayor fuerza a la hora de clasificar entre el Cansancio Emocional Medio y Alto.
+
+Para la Despersonalización:
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+modelo_logitD <- glm(MBI_D_Cat ~Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI + Extrav_NEOFFI + Apert_NEOFFI, 
+              family = binomial(link = "logit"), 
+              data = MBI_D_MA)
+
+coeficientes <- coef(modelo_logitD)
+
+
+# Ordenar los coeficientes por valor absoluto
+coef_ordenados <- coeficientes[order(abs(coeficientes), decreasing = TRUE)]
+
+# Mostrar los coeficientes ordenados
+#print("Coeficientes beta ordenados por valor absoluto:")
+#print(coef_ordenados)
+```
+Como puede observarse, el coeficiente con mayor valor absoluto se trata del asociado a la variable independiente Responsabilidad tomando un valor de $\beta$=-0.084439394. Esto sugiere que la Responsabilidad es la variable con mayor fuerza a la hora de clasificar entre la Despersonalización Media y Alta.
+
+Para la Realización Personal:
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+modelo_logitRP <- glm(MBI_RP_Cat ~Neur_NEOFFI + Amab_NEOFFI + Resp_NEOFFI + Extrav_NEOFFI + Apert_NEOFFI, 
+              family = binomial(link = "logit"), 
+              data = MBI_RP_BM)
+
+coeficientes <- coef(modelo_logitRP)
+
+# Ordenar los coeficientes por valor absoluto
+coef_ordenados <- coeficientes[order(abs(coeficientes), decreasing = TRUE)]
+
+# Mostrar los coeficientes ordenados
+#print("Coeficientes beta ordenados por valor absoluto:")
+#print(coef_ordenados)
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#Cansancio Emocional
+MBI_CE_BM=vector() #Vector Bajo-Medio
+MBI_CE_BM=primaria[primaria$MBI_CE_Cat!="Alto",]
+MBI_CE_BM$MBI_CE_Cat <- factor(MBI_CE_BM$MBI_CE_Cat, levels = c("Bajo", "Medio"), labels = c(0, 1))
+
+MBI_CE_MA=vector()#Vector Medio-Alto
+MBI_CE_MA=primaria[primaria$MBI_CE_Cat!="Bajo",]
+MBI_CE_MA$MBI_CE_Cat <- factor(MBI_CE_MA$MBI_CE_Cat, levels = c("Medio", "Alto"), labels = c(0, 1))
+
+#Realización Personal
+MBI_RP_BM=vector() #Vector Bajo-Medio
+MBI_RP_BM=primaria[primaria$MBI_RP_Cat!="Alto",]
+MBI_RP_BM$MBI_RP_Cat <- factor(MBI_RP_BM$MBI_RP_Cat, levels = c("Bajo", "Medio"), labels = c(0, 1))
+
+MBI_RP_MA=vector()#Vector Medio-Alto
+MBI_RP_MA=primaria[primaria$MBI_RP_Cat!="Bajo",]
+MBI_RP_MA$MBI_RP_Cat <- factor(MBI_RP_MA$MBI_RP_Cat, levels = c("Medio", "Alto"), labels = c(0, 1))
+
+#Despersonalización
+MBI_D_BM=vector() #Vector Bajo-Medio
+MBI_D_BM=primaria[primaria$MBI_D_Cat!="Alto",]
+MBI_D_BM$MBI_D_Cat <- factor(MBI_D_BM$MBI_D_Cat, levels = c("Bajo", "Medio"), labels = c(0, 1))
+
+MBI_D_MA=vector()#Vector Medio-Alto
+MBI_D_MA=primaria[primaria$MBI_D_Cat!="Bajo",]
+MBI_D_MA$MBI_D_Cat <- factor(MBI_D_MA$MBI_D_Cat, levels = c("Medio", "Alto"), labels = c(0, 1))
+
+
+
+```
+
+
+Como puede observarse, el coeficiente con mayor valor absoluto se trata del asociado a la variable independiente Neuroticismo tomando un valor de $\beta$=0.04803630. Esto sugiere que el Neuroticismo es la variable con mayor fuerza a la hora de clasificar entre la Realización Personal Media y Baja. Además, la Amabilidad también tiene una fuerza significativa con un valor de coeficiente muy cercano al del Neuroticismo ($\beta$=-0.03903669).
+
+Una vez que disponemos del modelo se procede a comprobar su funcionamiento. Para ello, se obtienen las matrices de confusión que permiten comparar las predicciones del modelo con los resultados reales y evaluar cómo de bien está funcionando el modelo a clasificar los datos en las categorías correctas. 
+
+Para el caso del Cansancio Emocional:
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+predicciones_prob <- predict(modelo_logitCE, type = "response")
+
+
+predicciones_binarias <- ifelse(predicciones_prob >= 0.5, 1, 0)
+
+
+matriz_confusion <- table(Prediccion = predicciones_binarias, Real = MBI_CE_MA$MBI_CE_Cat)
+
+
+print("Matriz de confusión:")
+print(matriz_confusion)
+```
+
+El modelo predijo correctamente que el individuo tenía Cansancio emocional 40 veces, que el individuo tenía Cansancio Emocional cuando en realidad no lo tenía 19 veces, que el individuo no tenía Cansancio Emocional cuando en realidad sí lo tenía 24 veces y predijo correctamente que el individuo no tenía Cansancio Emocional 57 veces. 
+
+Para el caso de la Despersonalización:
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Generar predicciones (probabilidades)
+predicciones_prob <- predict(modelo_logitD, type = "response")
+
+# Convertir probabilidades en predicciones binarias (umbral = 0.5)
+predicciones_binarias <- ifelse(predicciones_prob >= 0.5, 1, 0)
+
+# Crear la matriz de confusión
+matriz_confusion <- table(Prediccion = predicciones_binarias, Real = MBI_D_MA$MBI_D_Cat)
+
+# Mostrar la matriz de confusión
+print("Matriz de confusión:")
+print(matriz_confusion)
+```
+El modelo predijo correctamente que el individuo tenía Despersonalización 50 veces, que el individuo tenía Despersonalización cuando en realidad no la tenía 21 veces, que el individuo no tenía Despersonalización cuando en realidad sí la tenía 23 veces y predijo correctamente que el individuo no tenía Despersonalización 77 veces. 
+
+Para el caso de la Realización Personal:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Generar predicciones (probabilidades)
+predicciones_prob <- predict(modelo_logitRP, type = "response")
+
+# Convertir probabilidades en predicciones binarias (umbral = 0.5)
+predicciones_binarias <- ifelse(predicciones_prob >= 0.5, 1, 0)
+
+# Crear la matriz de confusión
+matriz_confusion <- table(Prediccion = predicciones_binarias, Real = MBI_RP_BM$MBI_RP_Cat)
+
+# Mostrar la matriz de confusión
+print("Matriz de confusión:")
+print(matriz_confusion)
+```
+El modelo predijo correctamente que el individuo tenía Realización Personal 83 veces, que el individuo tenía Realización Personal cuando en realidad no la tenía 44 veces, que el individuo no tenía Realización Personal cuando en realidad sí la tenía 22 veces y predijo correctamente que el individuo no tenía Realización Personal 34 veces. 
+
+A continuación, se calculará el _training error_ del modelo. Este error muestra la proporción de predicciones incorrectas que el modelo realiza sobre el conjunto de los datos de entrenamiento.
+
+Para el caso del Cansancio Emocional:
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Calcular las predicciones binarias usando el modelo entrenado
+
+
+
+predicciones_binarias <- ifelse(predict(modelo_logitCE, type = "response") >= 0.5, 1, 0)
+
+# Calcular el training error (proporción de predicciones incorrectas)
+training_error <- mean(predicciones_binarias != MBI_CE_MA$MBI_CE_Cat)
+
+# Mostrar el training error
+cat("Training Error del modelo:", training_error*100, "(%)\n")
+
+```
+
+Para el caso de la Despersonalización:
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Calcular las predicciones binarias usando el modelo entrenado
+predicciones_binarias <- ifelse(predict(modelo_logitD, type = "response") >= 0.5, 1, 0)
+
+# Calcular el training error (proporción de predicciones incorrectas)
+training_error <- mean(predicciones_binarias != MBI_D_MA$MBI_D_Cat)
+
+# Mostrar el training error
+cat("Training Error del modelo:", training_error*100, "(%)\n")
+
+```
+
+
+Para el caso de la Realización Personal:
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Calcular las predicciones binarias usando el modelo entrenado
+predicciones_binarias <- ifelse(predict(modelo_logitRP, type = "response") >= 0.5, 1, 0)
+
+# Calcular el training error (proporción de predicciones incorrectas)
+training_error <- mean(predicciones_binarias != MBI_RP_BM$MBI_RP_Cat)
+
+# Mostrar el training error
+cat("Training Error del modelo:", training_error*100, "(%)\n")
+
+```
+
+
+Como puede comprobarse, los _training errors_ tanto para el modelo lineal como para el modelo de regresión logística son muy similares. Este hecho implica que ambos modelos están capturando la misma relación y por tanto realizando predicciones similares.
+
+Finalmente, se calculará el p-valor de las variables independientes de personalidad. Este nos permitirá determinar la significancia estadística de los resultados obtenidos en el análisis de datos, midiendo la fuerza de la evidencia en contra de la hipótesis nula. Cuanto más pequeño sea el p-valor, más evidencia habrá para rechazar la hipótesis nula. En nuesto caso, la hipótesis nula es que la variable independiente asociada a cada coeficiente del modelo no tiene efecto significativo sobre la variable dependiente. Se ha considerado un nivel de confianza del 95%
+
+Cuando el p-valor es menor que 0.05, se rechaza la hipótesis nula, lo que implica que el coeficiente $\beta_i$ es significativo en el modelo. Si el p-valor es mayor que 0.05, no hay evidencia para rechazar la hipótesis nula.
+
+Cálculo de los p-valores para el Cansancio Emocional:
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Resumen del modelo logístico
+summary_modelo <- summary(modelo_logitCE)
+
+# Mostrar los valores p
+p_valores <- summary_modelo$coefficients[, "Pr(>|z|)"]
+
+# Mostrar todos los valores p
+print("Valores p de los coeficientes:")
+print(p_valores)
+
+
+```
+En este caso, las variables significativas serían el Neuroticismo y la Extraversión.
+
+Cálculo de los p-valores para la Despersonalización:
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Resumen del modelo logístico
+summary_modelo <- summary(modelo_logitD)
+
+# Mostrar los valores p
+p_valores <- summary_modelo$coefficients[, "Pr(>|z|)"]
+
+# Mostrar todos los valores p
+print("Valores p de los coeficientes:")
+print(p_valores)
+
+
+```
+En este caso, las variables significativas serían el Neuroticismo y la Responsabilidad.
+
+Cálculo de los p-valores para la Realización Personal:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Resumen del modelo logístico
+summary_modelo <- summary(modelo_logitRP)
+
+# Mostrar los valores p
+p_valores <- summary_modelo$coefficients[, "Pr(>|z|)"]
+
+# Mostrar todos los valores p
+print("Valores p de los coeficientes:")
+print(p_valores)
+
+
+```
+
+En este caso, la única variable significativa sería el Neuroticismo. 
+
+
+
+
+# Conclusión
+Para comenzar, hemos de comentar que los errores obtenidos para el modelo lineal son elevados, más que aquellos obtenidos para el modelo logístico. A pesar de no ser mucho mayores que estos últimos, consideramos adecuado señalar que este tipo de modelo sería menos adecuado dado esta circustancia.
+
+Destacar que, a la hora de hacer el modelo lineal para todas las variables, tanto socio-categóricas como las NEOFFI de la personalidad, obtuvimos que las variables que indican el número de hijos no clasifican entre los niveles del MBI. Es por esto que consideramos que esta variable no tiene influencia en el Burnout.
+
+Siguiendo esta línea de razonamiento, observamos que los errores de estos modelos son muy elevados (mayores del 34%). Es por esto, y por el hecho de que las variables son categóricas en su mayoría y no numéricas, sabiendo entonces que no podemos medir el aumento en uno de una variable categórica de forma realista, por lo que no podemos concluir prácticamente nada haciendo uso de ellos.
+
+Tras realizar los modelos lineales, esta vez sólo para las variables de la personalidad respecto los tres posibles niveles de las respectivas variables del MBI, se obtiene que, para cada variable, los pesos que más influyen en la clasificación de niveles coinciden con aquellos intuidos de una primera visualización con el análisis exploratorio. Cabe destacar que los errores de esta sección son los mayores obtenidos, y que por ello no son del todo fiables (mayores del 36%).
+
+Se obtiene que el *Neuroticismo* tiene un peso elevado para el Cansancio Emocional y la Despersonalización, y que, al ser positivo, cada aumento en un nivel del *Neuroticismo* aumenta la probabilidad de que el Cansancio Emocional y la Despersonalización se sitúen en niveles altos. A partir de ahora, trataremos a esto como "positivo" y lo opuesto como "negativo". Además, el *Neuroticismo* es la variable más significativa para el Cansancio Emocional.
+La *Amabilidad* es la variable más significativa para la Despersonalización y tiene un peso negativo y elevado en las tres variables, de forma que se reducen cada que esta aumenta en uno. Por otro lado, la *Responsabilidad*  es influyente de forma negativa en la Despersonalización y la Realización Personal, siendo la variable más significativa en esta última. Finalmente, la *Apertura* no es influyente en ninguna, al tener poco peso en los tres modelos.
+
+Al hacer el mismo modelo tras dicotomizar los datos y trabajar exclusivamente con los niveles de interés para el estudio del Burnout, las conclusiones cambian y no se obtienen los mismos resultados que en el análisis exploratorio. También, el error de este caso es menor que el anterior, pero continúa siendo mayor que respecto los modelos logísticos.
+El *Neuroticismo* tiene ahora un peso elevado y positivo en las tres variables, y continúa siendo la más influyente en el Cansancio Emocional, y además ahora es también la mas significativa para la Realización Personal. La *Responsabilidad* es la más significativa para la Despersonalización pero no influye apenas en las otras dos variables del MBI. 
+La *Apertura* sigue siendo la variable menos influyente, pero esta vez es más significativa en el Cansancio Emocional. 
+
+Como conclusión de este fragmento, es evidente que el *Neuroticismo* es la variable más influyente en la presencia de Burnout, y, que al ser siempre una variable positiva, el aumento de un nivel de *Neuroticismo* implica una probabilidad mayor de sufrir Burnout. La *Responsabilidad* sería la segunda variable más significativa y la *Apertura* la menos importante en este problema.
+
+Por otro lado, a partir del modelo de regresión logística (logit) se ha podido predecir qué rasgos de personalidad son más o menos relevantes en la explicación de los síntomas del Burnout, gracias a la relación entre las variables que proporciona el modelo. 
+Se ha obtenido que el *Neuroticismo* es la variable más significativa en el Cansancio Emocional y en la Realización Personal, de nuevo, siendo positiva.
+Para la Despersonalización, la *Responsabilidad*,que influye de forma negativa, es la variable con mayor fuerza.  
+
+Estadísticamente, analizando los coeficientes que son significativos en el modelo, se ha obtenido que el Neuroticisimo es la única variable significativa que aparece simultáneamente en las tres variables del síndrome de Burnout. 
+Por tanto se pone de manifiesto que el **Neuroticismo** es un rasgo de personalidad muy influyente en el síndrome de Burnout, ya que es relevante en el estudio de cada una de las tres dimensiones del síndrome de Burnout. Por tanto, podría considerarse que los trabajadores con altos niveles de este rasgo de personalidad son más propensos a desarrollar este síndrome. 
+La *Amabilidad* y la *Apertura* en el modelo para las tres dimensiones de Burnout han resultado ser muy poco significativas, y la *Extraversión * es relevante sobre el modelo del Cansancio Emocional. 
+
+
